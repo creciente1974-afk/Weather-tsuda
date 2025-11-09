@@ -76,19 +76,70 @@ struct DailyForecast: Codable, Hashable {
 //時間ごとの予報
 struct HourlyForecast: Codable, Hashable {
     let time: String
-    let temprature: Double
+    let temperature: Double
     let condition: Condition
     let chanceOfRain: Double
 
     enum CodingKeys: String, CodingKey {
         case time
-        case temprature = "temp_c"
+        case temperature = "temp_c"
         case condition
         case chanceOfRain = "chance_of_rain"
     }
+    // 時間毎の予報を表示用の構造体の形に変換
+    func toDisplayFormat(hourlyForecast: HourlyForecast) -> HourlyDisplayForecast{
+        let dateAndTime: (String, String) = splitTime(timeString: hourlyForecast.time)
+        let displayWeather = HourlyDisplayForecast(
+            date: dateAndTime.0,
+            time: dateAndTime.1,
+            weatherIcon: hourlyForecast.condition.icon,
+            temperature: hourlyForecast.temperature,
+            chanceOfRain: hourlyForecast.chanceOfRain
+        )
+        return displayWeather
+    }
+    
+    // timeに入っている「日時」の文字列→「日付」、「時間」に分割して(日付、時間)の文字列のタプルで返す。
+    func splitTime(timeString: String) -> (String, String)  {
+        
+        var dateAndTimeString: (String, String) = ("----年--月--日", "--:--")
+        // 日付と時刻のフォーマットを指定
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
+        // 文字列をDate型に変換
+        if let date = dateFormatter.date(from: timeString) {
+            // Calendarを使って日付と時刻を抽出
+            let calendar = Calendar.current // ユーザーの現在の暦を取得
+            let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+            
+            // 日付と時刻の文字列を作成
+            let dateString = "\(components.year!)年\(components.month!)月\(components.day!)日"
+            let timeString = "\(components.hour!)" // 何時だけを表示(例: 11)
+            
+            // print(dateString) // 出力形式: 2024年10月20日
+            // print(timeString) // 出力形式: 11
+            dateAndTimeString = (dateString, timeString)
+            return dateAndTimeString
+        } else {
+            print("日付の変換に失敗しました")
+            return dateAndTimeString
+        }
+    }
+    
 }
 
 struct Condition: Codable, Hashable {
     let text: String
     let icon: String
+}
+
+// 毎時予報の表示用の構造体
+struct HourlyDisplayForecast: Identifiable {
+    var id = UUID()
+    let date: String
+    let time: String
+    let weatherIcon: String
+    let temperature: Double
+    let chanceOfRain: Double
 }
