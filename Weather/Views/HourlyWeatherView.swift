@@ -39,7 +39,7 @@ struct HourlyWeatherView: View {
                             HStack(spacing: 5) {
                                 ForEach(hourlyDisplayForecasts) {
                                     hourlyDisplayForecast in
-                                    // MARK: 1時間分の表示
+                                    // 1時間分の表示
                                     VStack(spacing: 10) {
                                         // 時刻
                                         Text(hourlyDisplayForecast.time)
@@ -60,6 +60,9 @@ struct HourlyWeatherView: View {
                                         // 降水確率
                                         Text(50, format: .number)
                                             .font(.subheadline)
+                                        
+                                       
+                                        
                                     }
                                     .frame(width: ScreenInfo.width / 9)
                                 }
@@ -76,7 +79,7 @@ struct HourlyWeatherView: View {
     }
 }
 
-// MARK: - 時間毎の予報のヘッダー
+//- 時間毎の予報のヘッダー
 struct HourlyWeatherHeader: View {
     var body: some View {
         VStack(alignment: .center, spacing: 12) {

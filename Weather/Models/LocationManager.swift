@@ -35,6 +35,7 @@ class LocationManager: NSObject, ObservableObject {
 extension LocationManager: CLLocationManagerDelegate {
 
     // 位置情報が更新されたときに実行される関数
+    @available(iOS, deprecated: 26.0, message: "Contains call to deprecated getAddressFromLocation.")
     func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
@@ -53,6 +54,7 @@ extension LocationManager: CLLocationManagerDelegate {
         print("Error: \(error.localizedDescription)")  // エラーの内容を出力
     }
     // 位置情報から住所を取得する関数
+    @available(iOS, deprecated: 26.0, message: "This implementation uses deprecated CLGeocoder APIs for demonstration.")
     private func getAddressFromLocation(location: CLLocation) {
         let geocoder = CLGeocoder()  // ジオコーダーを用意
 
